@@ -13,31 +13,31 @@ function ChartIndex(props) {
   const socket = new WebSocket(SOCKET_URL);
   const [chartData, setChartData] = useState(initialValue);
 
-  // socket.addEventListener('open', function(event) {
-  //   let myStocklist = JSON.parse(localStorage.getItem('stocks'));  
-  //   myStocklist.forEach((stock) => {
-  //     socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': stock.ticker }))
-  //   });
-  // });
+  socket.addEventListener('open', function(event) {
+    let myStocklist = JSON.parse(localStorage.getItem('stocks'));  
+    myStocklist.forEach((stock) => {
+      socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': stock.ticker }))
+    });
+  });
 
-  // socket.addEventListener('message', function(event) {
-  //   try {
-  //     let { s, p } = JSON.parse(event.data).data[0];
+  socket.addEventListener('message', function(event) {
+    try {
+      let { s, p } = JSON.parse(event.data).data[0];
 
-  //     let updatedChartData = chartData.map((stock) => {
-  //       if (stock.x === s) {
-  //         stock.y = p;
-  //       } else {
-  //         stock[s] = p
-  //       }
-  //       return stock;
-  //     });
-  //     setChartData(updatedChartData);
-  //   }
-  //   catch (err) {
-  //     console.error(`There was an error with the websocket data`, err);
-  //   }
-  // });
+      let updatedChartData = chartData.map((stock) => {
+        if (stock.x === s) {
+          stock.y = p;
+        } else {
+          stock[s] = p
+        }
+        return stock;
+      });
+      setChartData(updatedChartData);
+    }
+    catch (err) {
+      console.error(`There was an error with the websocket data`, err);
+    }
+  });
 
   useEffect(() => {
     if (props.newStock) {
